@@ -1,0 +1,25 @@
+@host = http://localhost:5073
+
+### 1. GET por id -> 200
+GET {{host}}/platos/1
+
+### 2. GET inexistente -> 404
+GET {{host}}/platos/9999
+
+### 3. PUT válido -> 200
+PUT {{host}}/platos/1
+Content-Type: application/json
+
+{ "nombre": "Encebollado", "descripcion": "Con pescado", "precio": 4.50, "disponible": true, "categoriaId": 1 }
+
+### 4. PUT inválido -> 400
+PUT {{host}}/platos/1
+Content-Type: application/json
+
+{ "nombre": "", "descripcion": "", "precio": 0, "disponible": true, "categoriaId": 1 }
+
+### 5. DELETE -> 204
+DELETE {{host}}/platos/1
+
+### 6. GET del eliminado -> 404
+GET {{host}}/platos/1
