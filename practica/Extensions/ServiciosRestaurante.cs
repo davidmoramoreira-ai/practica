@@ -7,8 +7,13 @@ public static class ServiciosRestaurante
 {
     public static IServiceCollection AddServiciosRestaurante(this IServiceCollection services)
     {
-        services.AddScoped<IPlatoRepositorio, PlatoRepositorio>();
+        // 1. Repositorios
+        services.AddScoped<PlatoRepositorio>();
+        services.AddScoped<CategoriaRepositorio>(); // <-- Añade esta línea
+
+        // 2. Servicios
         services.AddScoped<PlatoServicio>();
+
         return services;
     }
 }

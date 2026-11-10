@@ -13,5 +13,7 @@
         public bool Disponible { get; set; }
 
         public int CategoriaId { get; set; }
+
+        public string Catrgorias { get; set; } = "";
     }
 }

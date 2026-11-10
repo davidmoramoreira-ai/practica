@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using practica.Datos;
 using practica.Entidades;
-public class PlatoRepositorio(IConfiguration config) : IPlatoRepositorio
+
+public class PlatoRepositorio(IConfiguration config)
 {
     private readonly string _cn = config.GetConnectionString("Restaurante")!;
 
@@ -50,12 +49,13 @@ public class PlatoRepositorio(IConfiguration config) : IPlatoRepositorio
     {
         await using var cn = new SqlConnection(_cn);
         await cn.OpenAsync();
-        var cmd = new SqlCommand(
-            "INSERT INTO Platos (Nombre, Descripcion, Precio, Disponible, CategoriaId) OUTPUT INSERTED.Id VALUES (@nombre, @desc, @precio, @disp, @cat)", cn);
+        await using var cmd = new SqlCommand(
+            @"INSERT INTO Platos (Nombre, Descripcion, Precio, CategoriaId)
+              OUTPUT INSERTED.Id
+              VALUES (@nombre, @desc, @precio, @cat)", cn);
         cmd.Parameters.AddWithValue("@nombre", p.Nombre);
-        cmd.Parameters.AddWithValue("@desc", p.Descripcion ?? (object)DBNull.Value);
+        cmd.Parameters.AddWithValue("@desc", p.Descripcion);
         cmd.Parameters.AddWithValue("@precio", p.Precio);
-        cmd.Parameters.AddWithValue("@disp", p.Disponible);
         cmd.Parameters.AddWithValue("@cat", p.CategoriaId);
         return (int)(await cmd.ExecuteScalarAsync())!;
     }

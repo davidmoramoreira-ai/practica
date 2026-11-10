@@ -3,11 +3,18 @@ using practica.Entidades;
 using practica.Datos;
 namespace practica.Negocio;
 
-public class PlatoServicio(IPlatoRepositorio repo)
+public class PlatoServicio(PlatoRepositorio repo, CategoriaRepositorio categorias)
 {
-    public Task<List<Plato>> ListarAsync() => repo.ObtenerTodosAsync();
+    public Task<List<Plato>> ObtenerTodosAsync() => repo.ObtenerTodosAsync();
 
     public Task<Plato?> ObtenerPorIdAsync(int id) => repo.ObtenerPorIdAsync(id);
+
+    // NUEVO: Método para obtener los platos de una categoría específica
+    public async Task<List<Plato>> ObtenerPorCategoriaAsync(int categoriaId)
+    {
+        var lista = await repo.ObtenerTodosAsync();
+        return lista.Where(p => p.CategoriaId == categoriaId).ToList();
+    }
 
     public async Task<int> CrearAsync(Plato p)
     {
@@ -23,7 +30,6 @@ public class PlatoServicio(IPlatoRepositorio repo)
         }
     }
 
-    // Devuelve false si el plato no existe
     public async Task<bool> ActualizarAsync(Plato p)
     {
         if (p.Id <= 0)
@@ -40,7 +46,6 @@ public class PlatoServicio(IPlatoRepositorio repo)
         }
     }
 
-    // Devuelve false si el plato no existe
     public async Task<bool> EliminarAsync(int id) => await repo.EliminarAsync(id) > 0;
 
     private static void Validar(Plato p)
