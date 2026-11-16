@@ -2,10 +2,12 @@
 
 using practica.Entidades;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
 
 public class CategoriaRepositorio(IConfiguration config)
 {
-    private readonly string _cn = config.GetConnectionString("Restaurante")!;
+    private readonly string _cn = config.GetConnectionString("Restaurante")
+        ?? throw new InvalidOperationException("No se encontró la cadena de conexión 'Restaurante'.");
 
     public async Task<List<Categorias>> ObtenerTodasAsync()
     {
@@ -73,6 +75,4 @@ public class CategoriaRepositorio(IConfiguration config)
         cmd.Parameters.AddWithValue("@id", id);
         return Convert.ToInt32(await cmd.ExecuteScalarAsync());
     }
-
-   
 }
