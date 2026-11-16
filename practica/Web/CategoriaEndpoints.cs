@@ -1,12 +1,13 @@
-﻿    namespace practica.Web;
-using practica.Negocio;
+﻿namespace practica.Web;
+
 using practica.Entidades;
+using practica.Negocio;
 
 public static class CategoriaEndpoints
 {
     public static void MapCategoriaEndpoints(this WebApplication app)
     {
-        var grupo = app.MapGroup("/categorias");   // todas empiezan con /categorias
+        var grupo = app.MapGroup("/categorias");
 
         grupo.MapGet("/", async (CategoriaServicio s) =>
             Results.Ok(await s.ObtenerTodasAsync()));
@@ -14,16 +15,16 @@ public static class CategoriaEndpoints
         grupo.MapGet("/{id:int}", (int id, CategoriaServicio s) =>
             Respuestas.Manejar(async () => Results.Ok(await s.ObtenerPorIdAsync(id))));
 
-        // La relación: todos los platos de una categoría
+        // Todos los platos de una categoría
         grupo.MapGet("/{id:int}/platos", (int id, PlatoServicio s) =>
             Respuestas.Manejar(async () => Results.Ok(await s.ObtenerPorCategoriaAsync(id))));
 
         grupo.MapPost("/", (Categorias c, CategoriaServicio s) =>
-         Respuestas.Manejar(async () =>
-         {
-             c.Id = await s.AgregarAsync(c);
-             return Results.Created($"/categorias/{c.Id}", c);
-         }));
+            Respuestas.Manejar(async () =>
+            {
+                c.Id = await s.AgregarAsync(c);
+                return Results.Created($"/categorias/{c.Id}", c);
+            }));
 
         grupo.MapPut("/{id:int}", (int id, Categorias c, CategoriaServicio s) =>
             Respuestas.Manejar(async () =>

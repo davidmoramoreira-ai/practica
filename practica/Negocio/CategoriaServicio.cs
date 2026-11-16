@@ -1,6 +1,8 @@
-﻿namespace practica.Negocio;
-using practica.Entidades;
+namespace practica.Negocio;
+
+using Microsoft.Data.SqlClient;
 using practica.Datos;
+using practica.Entidades;
 
 public class CategoriaServicio(CategoriaRepositorio repo)
 {
@@ -17,15 +19,29 @@ public class CategoriaServicio(CategoriaRepositorio repo)
     public async Task<int> AgregarAsync(Categorias c)
     {
         Validar(c);
-        return await repo.AgregarAsync(c);
+        try
+        {
+            return await repo.AgregarAsync(c);
+        }
+        catch (SqlException ex) when (ex.Number is 2627 or 2601)
+        {
+            throw new InvalidOperationException($"Ya existe una categoría con el nombre '{c.Nombre}'.");   // 409
+        }
     }
 
     public async Task ActualizarAsync(Categorias c)
     {
         Validar(c);
-        var filas = await repo.ActualizarAsync(c);
-        if (filas == 0)
-            throw new KeyNotFoundException($"No existe la categoría {c.Id}.");   // 404
+        try
+        {
+            var filas = await repo.ActualizarAsync(c);
+            if (filas == 0)
+                throw new KeyNotFoundException($"No existe la categoría {c.Id}.");   // 404
+        }
+        catch (SqlException ex) when (ex.Number is 2627 or 2601)
+        {
+            throw new InvalidOperationException($"Ya existe una categoría con el nombre '{c.Nombre}'.");   // 409
+        }
     }
 
     public async Task EliminarAsync(int id)
@@ -36,9 +52,16 @@ public class CategoriaServicio(CategoriaRepositorio repo)
             throw new InvalidOperationException(
                 $"La categoría {id} tiene {platos} platos. Muévelos o elimínalos primero.");   // 409
 
-        var filas = await repo.EliminarAsync(id);
-        if (filas == 0)
-            throw new KeyNotFoundException($"No existe la categoría {id}.");   // 404
+        try
+        {
+            var filas = await repo.EliminarAsync(id);
+            if (filas == 0)
+                throw new KeyNotFoundException($"No existe la categoría {id}.");   // 404
+        }
+        catch (SqlException ex) when (ex.Number == 547)
+        {
+            throw new InvalidOperationException("No se puede eliminar la categoría porque tiene registros relacionados."); // 409
+        }
     }
 
     private static void Validar(Categorias c)
@@ -50,4 +73,3 @@ public class CategoriaServicio(CategoriaRepositorio repo)
         c.Nombre = c.Nombre.Trim();
     }
 }
-

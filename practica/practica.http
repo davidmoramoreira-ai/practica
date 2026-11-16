@@ -1,25 +1,161 @@
 @host = http://localhost:5073
 
-### 1. GET por id -> 200
+### =======================================================
+### 🍲 1. PLATOS
+### =======================================================
+
+### 1.1 GET Todos los platos activos -> 200
+GET {{host}}/platos
+
+### 1.2 GET por ID existente -> 200
 GET {{host}}/platos/1
 
-### 2. GET inexistente -> 404
+### 1.3 GET inexistente -> 404
 GET {{host}}/platos/9999
 
-### 3. PUT válido -> 200
+### 1.4 POST crear plato válido -> 201
+POST {{host}}/platos
+Content-Type: application/json
+
+{
+  "nombre": "Ceviche Mixto",
+  "descripcion": "Camarón y pescado fresco con chifles",
+  "precio": 8.50,
+  "categoriaId": 1
+}
+
+### 1.5 POST crear plato inválido -> 400
+POST {{host}}/platos
+Content-Type: application/json
+
+{
+  "nombre": "",
+  "descripcion": "",
+  "precio": 0,
+  "categoriaId": 0
+}
+
+### 1.6 POST crear plato con categoría inexistente -> 400
+POST {{host}}/platos
+Content-Type: application/json
+
+{
+  "nombre": "Plato Fantasma",
+  "descripcion": "Categoría no existe",
+  "precio": 5.00,
+  "categoriaId": 999
+}
+
+### 1.7 PUT actualizar plato válido -> 200
 PUT {{host}}/platos/1
 Content-Type: application/json
 
-{ "nombre": "Encebollado", "descripcion": "Con pescado", "precio": 4.50, "disponible": true, "categoriaId": 1 }
+{
+  "nombre": "Encebollado Mixto",
+  "descripcion": "Con pescado y camarón",
+  "precio": 5.50,
+  "disponible": true,
+  "categoriaId": 1
+}
 
-### 4. PUT inválido -> 400
+### 1.8 PUT plato inválido -> 400
 PUT {{host}}/platos/1
 Content-Type: application/json
 
-{ "nombre": "", "descripcion": "", "precio": 0, "disponible": true, "categoriaId": 1 }
+{
+  "nombre": "",
+  "descripcion": "",
+  "precio": 0,
+  "disponible": true,
+  "categoriaId": 1
+}
 
-### 5. DELETE -> 204
+### 1.9 PUT plato inexistente -> 404
+PUT {{host}}/platos/9999
+Content-Type: application/json
+
+{
+  "nombre": "Inexistente",
+  "descripcion": "No existe",
+  "precio": 10.00,
+  "disponible": true,
+  "categoriaId": 1
+}
+
+### 1.10 DELETE plato existente (borrado lógico) -> 204
 DELETE {{host}}/platos/1
 
-### 6. GET del eliminado -> 404
+### 1.11 GET del plato recién eliminado -> 404
 GET {{host}}/platos/1
+
+
+### =======================================================
+### 🏷️ 2. CATEGORÍAS
+### =======================================================
+
+### 2.1 GET Todas las categorías -> 200
+GET {{host}}/categorias
+
+### 2.2 GET Categoría por ID -> 200
+GET {{host}}/categorias/1
+
+### 2.3 GET Categoría inexistente -> 404
+GET {{host}}/categorias/9999
+
+### 2.4 GET Platos de una categoría -> 200
+GET {{host}}/categorias/2/platos
+
+### 2.5 GET Platos de categoría inexistente -> 404
+GET {{host}}/categorias/999/platos
+
+### 2.6 POST Crear categoría válida -> 201
+POST {{host}}/categorias
+Content-Type: application/json
+
+{
+  "nombre": "Postres"
+}
+
+### 2.7 POST Crear categoría duplicada -> 409
+POST {{host}}/categorias
+Content-Type: application/json
+
+{
+  "nombre": "Bebidas"
+}
+
+### 2.8 POST Crear categoría inválida -> 400
+POST {{host}}/categorias
+Content-Type: application/json
+
+{
+  "nombre": ""
+}
+
+### 2.9 DELETE Categoría con platos asociados -> 409
+DELETE {{host}}/categorias/2
+
+
+### =======================================================
+### 📦 3. PRODUCTOS (EN MEMORIA)
+### =======================================================
+
+### 3.1 GET Productos disponibles (Stock > 0) -> 200
+GET {{host}}/productos
+
+### 3.2 GET Todos los productos (incluye sin stock) -> 200
+GET {{host}}/productos/todos
+
+### 3.3 GET Producto por ID existente -> 200
+GET {{host}}/productos/1
+
+### 3.4 GET Producto inexistente -> 404
+GET {{host}}/productos/999
+
+
+### =======================================================
+### 📄 4. OPENAPI ESPECIFICACIÓN
+### =======================================================
+
+### 4.1 OpenAPI v1 Document
+GET {{host}}/openapi/v1.json
