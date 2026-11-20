@@ -4,7 +4,7 @@ using Microsoft.Data.SqlClient;
 using practica.Datos;
 using practica.Entidades;
 
-public class CategoriaServicio(CategoriaRepositorio repo)
+public class CategoriaServicio(ICategoriaRepositorio repo)
 {
     public Task<List<Categorias>> ObtenerTodasAsync() => repo.ObtenerTodasAsync();
 

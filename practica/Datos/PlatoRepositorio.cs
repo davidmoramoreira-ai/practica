@@ -4,7 +4,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using practica.Entidades;
 
-public class PlatoRepositorio(IConfiguration config)
+public class PlatoRepositorio(IConfiguration config) : IPlatoRepositorio
 {
     private readonly string _cn = config.GetConnectionString("Restaurante")
         ?? throw new InvalidOperationException("No se encontró la cadena de conexión 'Restaurante'.");

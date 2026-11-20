@@ -2,7 +2,7 @@
 namespace practica.Datos
 
 {
-    public class ProductoRepositorio
+    public class ProductoRepositorio : IProductoRepositorio
     {
 
         private static readonly List<Producto> _datos = new()

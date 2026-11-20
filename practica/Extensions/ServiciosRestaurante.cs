@@ -8,9 +8,9 @@ public static class ServiciosRestaurante
     public static IServiceCollection AddServiciosRestaurante(this IServiceCollection services)
     {
         // 1. Repositorios
-        services.AddScoped<ProductoRepositorio>();
-        services.AddScoped<PlatoRepositorio>();
-        services.AddScoped<CategoriaRepositorio>();
+        services.AddScoped<IProductoRepositorio, ProductoRepositorio>();
+        services.AddScoped<IPlatoRepositorio, PlatoRepositorio>();
+        services.AddScoped<ICategoriaRepositorio, CategoriaRepositorio>();
 
         // 2. Servicios
         services.AddScoped<ProductoServicio>();

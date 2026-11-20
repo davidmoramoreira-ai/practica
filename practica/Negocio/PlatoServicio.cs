@@ -4,7 +4,7 @@ using Microsoft.Data.SqlClient;
 using practica.Datos;
 using practica.Entidades;
 
-public class PlatoServicio(PlatoRepositorio repo, CategoriaRepositorio categorias)
+public class PlatoServicio(IPlatoRepositorio repo, ICategoriaRepositorio categorias)
 {
     public Task<List<Plato>> ObtenerTodosAsync() => repo.ObtenerTodosAsync();
 

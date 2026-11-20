@@ -8,7 +8,8 @@ namespace practica.Web;
         public static void MapUsuarioEndpoints(
             this IEndpointRouteBuilder app)
         {
-            var g = app.MapGroup("/usuarios");
+            var g = app.MapGroup("/usuarios")
+              .RequireAuthorization("SoloAdmin");
 
             // GET /usuarios → 200 con la lista de UsuarioDto
             g.MapGet("", async (UsuarioServicio s) =>
