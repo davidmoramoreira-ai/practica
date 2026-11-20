@@ -3,7 +3,7 @@
 using practica.Datos;
 using practica.Entidades;
 
-public class ProductoServicio(ProductoRepositorio repo)
+public class ProductoServicio(IProductoRepositorio repo)
 {
     public List<Producto> ObtenerTodos() => repo.ObtenerTodos();
 
